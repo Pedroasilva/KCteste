@@ -16,6 +16,13 @@ class ProdutoController extends Controller
         $this->produtoRepository = $produtoRepository;
     }
 
+
+    /**
+     * @OA\Get(
+     *     path="/projects",
+     *     @OA\Response(response="200", description="Display a listing of projects.")
+     * )
+     */
     public function index(): JsonResponse 
     {
         return response()->json([
