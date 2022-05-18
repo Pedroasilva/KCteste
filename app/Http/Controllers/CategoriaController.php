@@ -20,6 +20,7 @@ class CategoriaController extends Controller
      * @OA\Get(
      *     path="/categorias",
      *     tags={"Categories"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(response="200", description="Display a listing of categories.")
      * )
      */
@@ -34,6 +35,7 @@ class CategoriaController extends Controller
      * @OA\Post(
      *     path="/categorias",
      *     tags={"Categories"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *          response="200",
      *          description="Store new category"
@@ -67,6 +69,7 @@ class CategoriaController extends Controller
      * @OA\Get(
      *     path="/categorias/{id}",
      *     tags={"Categories"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *          response="200",
      *          description="Display a category by id."
@@ -97,6 +100,7 @@ class CategoriaController extends Controller
      * @OA\Put(
      *     path="/categorias/{id}",
      *     tags={"Categories"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *          response="200",
      *          description="Update a category by id."
@@ -141,6 +145,7 @@ class CategoriaController extends Controller
      * @OA\Delete(
      *     path="/categorias/{id}",
      *     tags={"Categories"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *          response="200",
      *          description="Delete a category by id."

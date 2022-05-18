@@ -6,13 +6,16 @@ use App\Interfaces\ProdutoRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use JWTAuth;
 
 class ProdutoController extends Controller
 {
+    protected $user;
     private ProdutoRepositoryInterface $produtoRepository;
 
     public function __construct(ProdutoRepositoryInterface $produtoRepository)
     {
+        $this->user = JWTAuth::parseToken()->authenticate();
         $this->produtoRepository = $produtoRepository;
     }
 
@@ -20,6 +23,7 @@ class ProdutoController extends Controller
      * @OA\Get(
      *     path="/produtos",
      *     tags={"Products"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(response="200", description="Display a listing of products.")
      * )
      */
@@ -34,6 +38,7 @@ class ProdutoController extends Controller
      * @OA\Post(
      *     path="/produtos",
      *     tags={"Products"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *          response="200",
      *          description="Store new product"
@@ -79,6 +84,7 @@ class ProdutoController extends Controller
      * @OA\Get(
      *     path="/produtos/{id}",
      *     tags={"Products"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *          response="200",
      *          description="Display a product by id."
@@ -109,6 +115,7 @@ class ProdutoController extends Controller
      * @OA\Put(
      *     path="/produtos/{id}",
      *     tags={"Products"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *          response="200",
      *          description="Update a product by id."
@@ -159,6 +166,7 @@ class ProdutoController extends Controller
      * @OA\Delete(
      *     path="/produtos/{id}",
      *     tags={"Products"},
+     *     security={{"bearerAuth":{}}},
      *     @OA\Response(
      *          response="200",
      *          description="Delete a product by id."

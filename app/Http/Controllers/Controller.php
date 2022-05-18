@@ -22,6 +22,12 @@ use Illuminate\Routing\Controller as BaseController;
  *     name="Projects",
  *     description="API Endpoints of Projects"
  * )
+ *
+ * @OAS\SecurityScheme(
+ *     securityScheme="bearerAuth",
+ *     type="http",
+ *     scheme="bearer"
+ * )
  */
 class Controller extends BaseController
 {
