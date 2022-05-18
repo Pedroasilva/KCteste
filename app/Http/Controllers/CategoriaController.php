@@ -2,85 +2,167 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Categoria;
-use App\Http\Requests\StoreCategoriaRequest;
-use App\Http\Requests\UpdateCategoriaRequest;
+use App\Interfaces\CategoriaRepositoryInterface;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class CategoriaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    private CategoriaRepositoryInterface $categoriaRepository;
+
+    public function __construct(CategoriaRepositoryInterface $categoriaRepository)
     {
-        //
+        $this->CategoriaRepository = $categoriaRepository;
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @OA\Get(
+     *     path="/categorias",
+     *     tags={"Categories"},
+     *     @OA\Response(response="200", description="Display a listing of categories.")
+     * )
      */
-    public function create()
+    public function index(): JsonResponse
     {
-        //
+        return response()->json([
+            'data' => $this->CategoriaRepository->getAllCategorias(),
+        ]);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @OA\Post(
+     *     path="/categorias",
+     *     tags={"Categories"},
+     *     @OA\Response(
+     *          response="200",
+     *          description="Store new category"
+     *      ),
      *
-     * @param  \App\Http\Requests\StoreCategoriaRequest  $request
-     * @return \Illuminate\Http\Response
+     * @OA\RequestBody(
+     *    required=true,
+     *    @OA\JsonContent(
+     *       required={"descricao"},
+     *       @OA\Property(property="descricao", type="string"),
+     *    ),
+     * ),
+     *
+     * )
      */
-    public function store(StoreCategoriaRequest $request)
+    public function store(Request $request): JsonResponse
     {
-        //
+        $categoriaDetails = $request->only([
+            'descricao',
+        ]);
+
+        return response()->json(
+            [
+                'data' => $this->CategoriaRepository->createCategoria($categoriaDetails),
+            ],
+            Response::HTTP_CREATED
+        );
     }
 
     /**
-     * Display the specified resource.
+     * @OA\Get(
+     *     path="/categorias/{id}",
+     *     tags={"Categories"},
+     *     @OA\Response(
+     *          response="200",
+     *          description="Display a category by id."
+     *      ),
      *
-     * @param  \App\Models\Categoria  $categoria
-     * @return \Illuminate\Http\Response
+     *      @OA\Parameter(
+     *          name="id",
+     *          description="category id",
+     *          required=true,
+     *          in="path",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *
+     * )
      */
-    public function show(Categoria $categoria)
+    public function show(Request $request): JsonResponse
     {
-        //
+        $categoriaId = $request->route('id');
+
+        return response()->json([
+            'data' => $this->CategoriaRepository->getCategoriaById($categoriaId),
+        ]);
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * @OA\Put(
+     *     path="/categorias/{id}",
+     *     tags={"Categories"},
+     *     @OA\Response(
+     *          response="200",
+     *          description="Update a category by id."
+     *      ),
      *
-     * @param  \App\Models\Categoria  $categoria
-     * @return \Illuminate\Http\Response
+     *      @OA\Parameter(
+     *          name="id",
+     *          description="Category id",
+     *          required=true,
+     *          in="path",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     * @OA\RequestBody(
+     *    required=true,
+     *    @OA\JsonContent(
+     *       required={"descricao"},
+     *       @OA\Property(property="descricao", type="string"),
+     *    ),
+     * ),     * )
      */
-    public function edit(Categoria $categoria)
+    public function update(Request $request): JsonResponse
     {
-        //
+        $categoriaId = $request->route('id');
+        $categoriaDetails = $request->only([
+            'descricao',
+            'dimensoes',
+            'codigo',
+            'referencia',
+            'saldo_estoque',
+            'preco',
+            'categoria_id',
+        ]);
+
+        return response()->json([
+            'data' => $this->CategoriaRepository->updateCategoria($categoriaId, $categoriaDetails),
+        ]);
     }
 
     /**
-     * Update the specified resource in storage.
+     * @OA\Delete(
+     *     path="/categorias/{id}",
+     *     tags={"Categories"},
+     *     @OA\Response(
+     *          response="200",
+     *          description="Delete a category by id."
+     *      ),
      *
-     * @param  \App\Http\Requests\UpdateCategoriaRequest  $request
-     * @param  \App\Models\Categoria  $categoria
-     * @return \Illuminate\Http\Response
+     *      @OA\Parameter(
+     *          name="id",
+     *          description="Category id",
+     *          required=true,
+     *          in="path",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *
+     * )
      */
-    public function update(UpdateCategoriaRequest $request, Categoria $categoria)
+    public function destroy(Request $request): JsonResponse
     {
-        //
-    }
+        $categoriaId = $request->route('id');
+        $this->CategoriaRepository->deleteCategoria($categoriaId);
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Categoria  $categoria
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Categoria $categoria)
-    {
-        //
+        return response()->json(null, Response::HTTP_NO_CONTENT);
     }
 }
