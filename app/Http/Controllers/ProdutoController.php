@@ -7,30 +7,55 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class ProdutoController extends Controller 
+class ProdutoController extends Controller
 {
     private ProdutoRepositoryInterface $produtoRepository;
 
-    public function __construct(ProdutoRepositoryInterface $produtoRepository) 
+    public function __construct(ProdutoRepositoryInterface $produtoRepository)
     {
         $this->produtoRepository = $produtoRepository;
     }
 
-
     /**
      * @OA\Get(
-     *     path="/projects",
-     *     @OA\Response(response="200", description="Display a listing of projects.")
+     *     path="/produtos",
+     *     tags={"Products"},
+     *     @OA\Response(response="200", description="Display a listing of products.")
      * )
      */
-    public function index(): JsonResponse 
+    public function index(): JsonResponse
     {
         return response()->json([
-            'data' => $this->produtoRepository->getAllProdutos()
+            'data' => $this->produtoRepository->getAllProdutos(),
         ]);
     }
 
-    public function store(Request $request): JsonResponse 
+    /**
+     * @OA\Post(
+     *     path="/produtos",
+     *     tags={"Products"},
+     *     @OA\Response(
+     *          response="200",
+     *          description="Store new product"
+     *      ),
+     *
+     * @OA\RequestBody(
+     *    required=true,
+     *    @OA\JsonContent(
+     *       required={"descricao","dimensoes","codigo","referencia","saldo_estoque","preco","categoria_id"},
+     *       @OA\Property(property="descricao", type="string"),
+     *       @OA\Property(property="dimensoes", type="string"),
+     *       @OA\Property(property="codigo", type="string"),
+     *       @OA\Property(property="referencia", type="string"),
+     *       @OA\Property(property="saldo_estoque", type="integer"),
+     *       @OA\Property(property="preco", type="float"),
+     *       @OA\Property(property="categoria_id", type="integer"),
+     *    ),
+     * ),
+     *
+     * )
+     */
+    public function store(Request $request): JsonResponse
     {
         $produtoDetails = $request->only([
             'descricao',
@@ -44,22 +69,75 @@ class ProdutoController extends Controller
 
         return response()->json(
             [
-                'data' => $this->produtoRepository->createProduto($produtoDetails)
+                'data' => $this->produtoRepository->createProduto($produtoDetails),
             ],
             Response::HTTP_CREATED
         );
     }
 
-    public function show(Request $request): JsonResponse 
+    /**
+     * @OA\Get(
+     *     path="/produtos/{id}",
+     *     tags={"Products"},
+     *     @OA\Response(
+     *          response="200",
+     *          description="Display a product by id."
+     *      ),
+     *
+     *      @OA\Parameter(
+     *          name="id",
+     *          description="Product id",
+     *          required=true,
+     *          in="path",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *
+     * )
+     */
+    public function show(Request $request): JsonResponse
     {
         $produtoId = $request->route('id');
 
         return response()->json([
-            'data' => $this->produtoRepository->getProdutoById($produtoId)
+            'data' => $this->produtoRepository->getProdutoById($produtoId),
         ]);
     }
 
-    public function update(Request $request): JsonResponse 
+    /**
+     * @OA\Put(
+     *     path="/produtos/{id}",
+     *     tags={"Products"},
+     *     @OA\Response(
+     *          response="200",
+     *          description="Update a product by id."
+     *      ),
+     *
+     *      @OA\Parameter(
+     *          name="id",
+     *          description="Product id",
+     *          required=true,
+     *          in="path",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     * @OA\RequestBody(
+     *    required=true,
+     *    @OA\JsonContent(
+     *       required={"descricao","dimensoes","codigo","referencia","saldo_estoque","preco","categoria_id"},
+     *       @OA\Property(property="descricao", type="string"),
+     *       @OA\Property(property="dimensoes", type="string"),
+     *       @OA\Property(property="codigo", type="string"),
+     *       @OA\Property(property="referencia", type="string"),
+     *       @OA\Property(property="saldo_estoque", type="integer"),
+     *       @OA\Property(property="preco", type="float"),
+     *       @OA\Property(property="categoria_id", type="integer"),
+     *    ),
+     * ),     * )
+     */
+    public function update(Request $request): JsonResponse
     {
         $produtoId = $request->route('id');
         $produtoDetails = $request->only([
@@ -73,11 +151,32 @@ class ProdutoController extends Controller
         ]);
 
         return response()->json([
-            'data' => $this->produtoRepository->updateProduto($produtoId, $produtoDetails)
+            'data' => $this->produtoRepository->updateProduto($produtoId, $produtoDetails),
         ]);
     }
 
-    public function destroy(Request $request): JsonResponse 
+    /**
+     * @OA\Delete(
+     *     path="/produtos/{id}",
+     *     tags={"Products"},
+     *     @OA\Response(
+     *          response="200",
+     *          description="Delete a product by id."
+     *      ),
+     *
+     *      @OA\Parameter(
+     *          name="id",
+     *          description="Product id",
+     *          required=true,
+     *          in="path",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *
+     * )
+     */
+    public function destroy(Request $request): JsonResponse
     {
         $produtoId = $request->route('id');
         $this->produtoRepository->deleteProduto($produtoId);

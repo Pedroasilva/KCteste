@@ -1,19 +1,199 @@
 {
     "openapi": "3.0.0",
     "info": {
-        "title": "My First API",
+        "title": "Test API",
         "version": "0.1"
     },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000/api/",
+            "description": "Test API Server"
+        }
+    ],
     "paths": {
-        "/projects": {
+        "/produtos": {
             "get": {
-                "operationId": "6a422ed3dce41d32c844d8a6e04bfe6a",
+                "tags": [
+                    "Products"
+                ],
+                "operationId": "a28d49d6336a249ac3bf0fdb3deb516f",
                 "responses": {
                     "200": {
-                        "description": "Display a listing of projects."
+                        "description": "Display a listing of products."
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Products"
+                ],
+                "operationId": "4ef2f8bfa3024fa10e6e5e26f25a7dd0",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "descricao",
+                                    "dimensoes",
+                                    "codigo",
+                                    "referencia",
+                                    "saldo_estoque",
+                                    "preco",
+                                    "categoria_id"
+                                ],
+                                "properties": {
+                                    "descricao": {
+                                        "type": "string"
+                                    },
+                                    "dimensoes": {
+                                        "type": "string"
+                                    },
+                                    "codigo": {
+                                        "type": "string"
+                                    },
+                                    "referencia": {
+                                        "type": "string"
+                                    },
+                                    "saldo_estoque": {
+                                        "type": "integer"
+                                    },
+                                    "preco": {
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "categoria_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Store new product"
+                    }
+                }
+            }
+        },
+        "/produtos/{id}": {
+            "get": {
+                "tags": [
+                    "Products"
+                ],
+                "operationId": "dd22a170cd1a1cd4de23ce8cbd7e6b77",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Product id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Display a product by id."
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Products"
+                ],
+                "operationId": "f51301fab977d8eb15f4969cdd5775a9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Product id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "descricao",
+                                    "dimensoes",
+                                    "codigo",
+                                    "referencia",
+                                    "saldo_estoque",
+                                    "preco",
+                                    "categoria_id"
+                                ],
+                                "properties": {
+                                    "descricao": {
+                                        "type": "string"
+                                    },
+                                    "dimensoes": {
+                                        "type": "string"
+                                    },
+                                    "codigo": {
+                                        "type": "string"
+                                    },
+                                    "referencia": {
+                                        "type": "string"
+                                    },
+                                    "saldo_estoque": {
+                                        "type": "integer"
+                                    },
+                                    "preco": {
+                                        "type": "number",
+                                        "format": "float"
+                                    },
+                                    "categoria_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Update a product by id."
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Products"
+                ],
+                "operationId": "60a103a91426588fa605c381fe0c8180",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Product id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Delete a product by id."
                     }
                 }
             }
         }
-    }
+    },
+    "tags": [
+        {
+            "name": "Projects",
+            "description": "API Endpoints of Projects"
+        }
+    ]
 }
